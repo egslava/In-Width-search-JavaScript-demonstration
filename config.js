@@ -1,0 +1,14 @@
+/**
+ * @author Slava
+ */
+
+CONFIG = {
+	DEF_FIELD_WIDTH: 3,
+	DEF_FIELD_HEIGHT: 3,
+	
+	MIN_FIELD_WIDTH: 2,
+	MIN_FIELD_HEIGHT: 2,
+
+    ANIMATION_SPEED: 5000,
+    ANIMATION_FPS: 25
+}
