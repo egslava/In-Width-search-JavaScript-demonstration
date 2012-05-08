@@ -167,6 +167,19 @@ function Field(_width, _height, _fieldDivId){
 			}
 		}
 	}
+    this.animateSequence = function(sequenceOfStates){
+
+        var currentTurn = 0;
+        function animateHelper(){
+            if(currentTurn + 1 >= sequenceOfStates.length)
+                return;
+            animate(animateHelper, sequenceOfStates[currentTurn].state, sequenceOfStates[currentTurn+1].state);
+            currentTurn ++;
+        }
+
+        animateHelper();
+
+    }
     this.randomize = function(){
         var lastAnimationSpeed = CONFIG.ANIMATION_SPEED;
         CONFIG.ANIMATION_SPEED = CONFIG.ANIMATION_SPEED / (field.length * field[0].length);
@@ -212,7 +225,25 @@ function Field(_width, _height, _fieldDivId){
             openStates = nextStates;
         }
 
-        console.log("Wow!");
+        //Getting path of decisions for the animation
+        var lastTurn = null;
+        var turn;
+        for(turn in openStates){
+            if(openStates[turn].equals(finishState)){
+                lastTurn = openStates[turn];
+                break;
+            }
+        }
+
+        if(lastTurn == null) return null;
+
+        var animatingSequence = [];
+        while(lastTurn != 0){
+            animatingSequence.push(lastTurn);
+            lastTurn = lastTurn.parentState;
+        }
+        animatingSequence.reverse();
+        return animatingSequence;
     }
 }
 window.addEventListener("load", function(){
