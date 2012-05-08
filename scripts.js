@@ -39,6 +39,7 @@ function Field(_width, _height, _fieldDivId){
 		else
 			numRows = _height;
 
+        CONFIG.ANIMATION_SPEED /= (numRows * numCols);
 		if (typeof _fieldDivId !== 'undefined')
 			node = document.getElementById(_fieldDivId);
 
@@ -181,11 +182,8 @@ function Field(_width, _height, _fieldDivId){
 
     }
     this.randomize = function(){
-        var lastAnimationSpeed = CONFIG.ANIMATION_SPEED;
-        CONFIG.ANIMATION_SPEED = CONFIG.ANIMATION_SPEED / (field.length * field[0].length);
 
         if (Math.random() > (1.0 - 1.0 / (field.length * field[0].length) ) / 2 ){
-            CONFIG.ANIMATION_SPEED = lastAnimationSpeed;
             return;
         }
         var i = Math.floor(Math.random() * (field.length-1));
@@ -195,9 +193,6 @@ function Field(_width, _height, _fieldDivId){
         animate(function(){
             that.randomize();
         })
-        CONFIG.ANIMATION_SPEED = lastAnimationSpeed;
-
-
     }
 
     this.solve = function(){
