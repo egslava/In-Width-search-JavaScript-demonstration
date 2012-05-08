@@ -171,7 +171,7 @@ function Field(_width, _height, _fieldDivId){
         var lastAnimationSpeed = CONFIG.ANIMATION_SPEED;
         CONFIG.ANIMATION_SPEED = CONFIG.ANIMATION_SPEED / (field.length * field[0].length);
 
-        if (Math.random() > (1.0 - 1.0 / (field.length * field[0].length) ) ){
+        if (Math.random() > (1.0 - 1.0 / (field.length * field[0].length) ) / 2 ){
             CONFIG.ANIMATION_SPEED = lastAnimationSpeed;
             return;
         }
@@ -217,6 +217,6 @@ function Field(_width, _height, _fieldDivId){
 }
 window.addEventListener("load", function(){
 
-	gameField = new Field(3, 3, "field");
+	gameField = new Field(CONFIG.DEF_FIELD_WIDTH, CONFIG.DEF_FIELD_HEIGHT, "field");
 
 });
