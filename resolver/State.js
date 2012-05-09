@@ -5,12 +5,16 @@
  * Time: 15:30
  * To change this template use File | Settings | File Templates.
  */
+//TODO: cache heuristic mark
+//TODO: make heuristic mark (slow, but more precise)
 
+var finishStateCache = null;
 function State(){
     var that = this;
     this.parentState = 0;
     this.state = [];
     this.distance = 0;      //distance from initial position in space of states
+    this.mark = -1;
 
     this.fill = function (from){
         var i = 0;
@@ -21,6 +25,22 @@ function State(){
             this.state.push(from[i].slice(0));
         }
     };
+
+    this.getHeuristicMarkFast = function(finishState){
+        var result = 0;
+        for(var i = 0; i < finishState.state.length; i++ ){
+            for(var j = 0; j < finishState.state[i].length; j++ ){
+                if( this.state[i][j] != finishState.state[i][j] ){
+                    result ++;
+                }
+            }
+        }
+
+        this.mark = result;
+        return result;
+    }
+
+    this.getHeuristicMark = this.getHeuristicMarkFast;
 
     this.clone = function(from){
         this.fill(from.state);
@@ -140,9 +160,10 @@ function State(){
         return result;
     }
 
-
     this.generateFinishState = function(){
         //Generating finish state
+        if(finishStateCache != null)
+            return finishStateCache;
         var finishState = new State();
         var finishStateArray = [];
 
@@ -157,6 +178,13 @@ function State(){
         finishState.fill(finishStateArray);
         return finishState;
     }
+}
+
+State.compareMarks = function(stateA, stateB){
+    var markA = stateA.distance + stateA.getHeuristicMark(finishStateCache);
+    var markB = stateB.distance + stateB.getHeuristicMark(finishStateCache);
+    if(markA == markB) return 0;
+    return (markA > markB? -1: 1);
 }
 
 State.removeDoubles = function(states){
