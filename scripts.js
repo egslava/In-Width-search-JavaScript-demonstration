@@ -200,10 +200,16 @@ function Field(_width, _height, _fieldDivId){
         var finishState = initialState.generateFinishState();
         var closedStates = [];
         var openStates = [initialState];
-        var indexOf = 0;
+        var indexOf;
+
+        var variants = 0;
+        var depth = 0;
         while((indexOf = finishState.indexOf(openStates)) == -1){
             var state;
             var nextStates = [];
+
+            depth ++;
+            console.log("Глубина поиска: " + depth + ". количество перебранных вариантов: " + variants);
             for (var iState = 0; iState < openStates.length; iState ++){
                 if(typeof openStates[iState] === "undefined")
                     continue;
@@ -212,11 +218,15 @@ function Field(_width, _height, _fieldDivId){
 
                 //TODO: 1. state.generateChildrenStates should receive openStates,
                 //TODO: it will increase performance, and we will can delete slow removeDoubles.
-                nextStates = nextStates.concat(state.generateChildrenStates(openStates, closedStates));
+                nextStates = nextStates.concat(state.generateChildrenStates(nextStates, openStates, closedStates));
+                //+State.removeDoubles(nextStates);
                 closedStates.push(state);
+                variants ++;
+                if(variants % 100 == 0){
+                    console.log("Вариантов перебрано: "+ variants);
+                }
             }
 
-            //State.removeDoubles(nextStates);
             openStates = nextStates;
         }
 

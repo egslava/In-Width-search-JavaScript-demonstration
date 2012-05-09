@@ -37,12 +37,19 @@ function State(){
         if(typeof withDistance === "undefined")
             withDistance = false;
 
-        for(i = 0; i < anotherState.state.length; i++){
-            for(j = 0; j < anotherState.state[i].length; j++){
+        var nRows = anotherState.state.length;
+        for(i = 0; i < nRows; i++){
+
+            var nColumns = anotherState.state[i].length;
+
+
+            //if(anotherState.state[i].toString() != this.state[i].toString())
+                //return false;
+            for(j = 0; j < nColumns; j++){
                 if(anotherState.state[i][j] != this.state[i][j])
                     return false;
 
-                if(withDistance == true)
+                if(withDistance)
                     if(anotherState.distance != this.distance)
                         return false;
             }
@@ -51,6 +58,7 @@ function State(){
     };
 
     this.indexOf = function(arrayOfStates, withDistance){
+        //return arrayOfStates.indexOf(this);   fail
 
         var i = 0;
         for(i; i < arrayOfStates.length; i++){
@@ -87,7 +95,7 @@ function State(){
 
     /**
      * @param forbiddenStates = [State, State, State, ...]*/
-    this.generateChildrenStates = function(openStates, forbiddenStates){
+    this.generateChildrenStates = function(nextStates, openStates, forbiddenStates){
         if(typeof forbiddenStates === undefined)
             throw "generateChildrenStates must have parameter";
         var i = 0;
@@ -105,6 +113,11 @@ function State(){
                     currentVariant.rotate(j, i, cw);
 
                     //in open state, then abort
+                    var indexOf = currentVariant.indexOf(forbiddenStates, false);
+                    if(indexOf != -1)   return;
+                    if(currentVariant.indexOf (nextStates, false) != -1){
+                        return;
+                    }
                     if(currentVariant.indexOf (openStates, false) != -1){
                         return;
                     }
@@ -112,12 +125,12 @@ function State(){
                     if(indexOf == -1)
                         result.push(currentVariant);
                     else{
-                        if(forbiddenStates[indexOf].distance > currentVariant.distance){
+                        /*if(forbiddenStates[indexOf].distance > currentVariant.distance){
                             delete forbiddenStates[indexOf];
                             forbiddenStates[indexOf] = forbiddenStates[forbiddenStates.length - 1];
                             forbiddenStates.length--;
                             result.push(currentVariant);
-                        }
+                        } Only in second lab*/
                     }
                 };
                 addCombination(true);
